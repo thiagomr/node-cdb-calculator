@@ -2,6 +2,14 @@ const { validateDateFormat } = require('./helper');
 const moment = require('moment-timezone');
 
 class Calculator {
+    /**
+     *
+     * @param {number} cdbRate
+     * @param {string} investmentDate
+     * @param {string} currentDate
+     * @param {Object} cdiPrices
+     *
+     */
     constructor(cdbRate, investmentDate, currentDate, cdiPrices) {
         this.cdbRate = cdbRate;
         this.investmentDate = investmentDate;
@@ -9,6 +17,11 @@ class Calculator {
         this.cdiPrices = cdiPrices || {};
     }
 
+    /**
+     * @returns
+     * @property {boolean} valid
+     * @property {string} message
+     */
     validateParams() {
         if (!this.cdbRate) {
             return {
@@ -65,11 +78,22 @@ class Calculator {
         };
     }
 
+    /**
+     * @param {number}
+     * @returns {number}
+     */
     getCDITaxValue(price) {
         const value = (Math.pow(price / 100 + 1, 1 / 252) - 1).toFixed(8);
         return parseFloat(value);
     }
 
+    /**
+     * @typedef CDB
+     * @property {string} date 2020-01-01
+     * @property {number} unitPrice 1020.55
+     *
+     * @returns {Array<CDB>}
+     */
     getCDITaxHistory() {
         const firstDate = moment(this.investmentDate);
         const lastDate = moment(this.currentDate);
@@ -95,6 +119,14 @@ class Calculator {
         return result;
     }
 
+    /**
+     *
+     * @param {number} accumulatedValue
+     * @param {number} tcdValue
+     * @param {number} cdbRateValue
+     *
+     * @returns {number}
+     */
     getTCDIAccumulatedValue(accumulatedValue, tcdValue, cdbRateValue) {
         return accumulatedValue * (1 + tcdValue * cdbRateValue / 100);
     }

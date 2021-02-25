@@ -2,6 +2,11 @@ const fs = require('fs');
 const moment = require('moment-timezone');
 const { validateDateFormat } = require('./helper');
 
+/**
+ *
+ * @param {string} path
+ * @returns {Promise<Object>} {"2020-01-01": 19.99}
+ */
 exports.getJSONPricesFromCsv = async (path) => {
     let prices = {}, data, delimiter;
 
