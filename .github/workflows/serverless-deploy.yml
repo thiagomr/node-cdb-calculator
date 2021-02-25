@@ -2,13 +2,24 @@ name: Serverless Deploy
 
 on:
   push:
-    branches: [ develop ]
+    branches:
+      - master
+      - develop
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
+    - name: Set env to staging
+      if: endsWith(github.ref, '/develop')
+      run: |
+        echo "::set-env name=ENVIRONMENT::develop"
+    - name: Set env to production
+      if: endsWith(github.ref, '/master')
+      run: |
+        echo "::set-env name=ENVIRONMENT::prod"
+
     - uses: actions/checkout@v2
 
     - name: Cache node modules
@@ -29,9 +40,9 @@ jobs:
 
     - name: Test
       run: npm test
-      
+
     - name: Config AWS Credentials
       run: ./node_modules/.bin/serverless config credentials --provider aws --key ${{ secrets.AWS_KEY }} --secret ${{ secrets.AWS_SECRET }}
-      
+
     - name: Deploy
-      run: ./node_modules/.bin/serverless deploy --stage develop --verbose
+      run: ./node_modules/.bin/serverless deploy --stage ${ENVIRONMENT} --verbose
