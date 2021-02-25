@@ -18,8 +18,6 @@ module.exports.cdb = async(event) => {
         return invalidRequestResponse(error.message);
     }
 
-    console.log('prices', prices);
-
     const calculator = new Calculator(parsedBody.cdbRate, parsedBody.investmentDate, parsedBody.currentDate, prices);
     const checkParams = calculator.validateParams();
 
