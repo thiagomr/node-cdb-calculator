@@ -1,4 +1,4 @@
-service: cbd
+service: cdb
 frameworkVersion: '2'
 
 provider:
