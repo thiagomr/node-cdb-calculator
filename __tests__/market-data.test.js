@@ -1,14 +1,5 @@
-const fs = require('fs');
 const { getJSONPricesFromCsv } = require('../src/lib/market-data');
-const csvPath = './__tests__/fake.csv';
-
-beforeAll(async () => {
-    await fs.promises.writeFile(csvPath, 'sSecurityName,dtDate,dLastTradePrice\r\nCDI,03/12/2019,4.9\r\nCDI,02/12/2019,4.9\r\n');
-});
-
-afterAll(async () => {
-    await fs.promises.unlink(csvPath);
-});
+const csvPath = './data/cdi-prices.test.csv';
 
 test('should load an invalid file', async () => {
     try {
@@ -22,6 +13,6 @@ test('should load an invalid file', async () => {
 test('should load a valid file', async() => {
     const prices = await getJSONPricesFromCsv(csvPath);
 
-    expect(Object.keys(prices).length).toBe(2);
-    expect(prices['03/12/2019']).toBe(4.9);
+    expect(Object.keys(prices).length).toBe(29);
+    expect(prices['2016-11-14']).toBe(13.88);
 });

@@ -1,8 +1,9 @@
 const { invalidRequestResponse, successResponse, serverErrorResponse } = require('./http');
+const { getJSONPricesFromCsv } = require('./lib/market-data');
 const Calculator = require('./lib/calculator');
 
 module.exports.cdb = async(event) => {
-    let parsedBody, responseBody;
+    let parsedBody, responseBody, prices;
 
     try {
         parsedBody = JSON.parse(event.body) || {};
@@ -11,7 +12,15 @@ module.exports.cdb = async(event) => {
         return invalidRequestResponse('invalid json body');
     }
 
-    const calculator = new Calculator(parsedBody.cdbRate, parsedBody.investmentDate, parsedBody.currentDate);
+    try {
+        prices = await getJSONPricesFromCsv('./data/cdi-prices.csv');
+    } catch (error) {
+        return invalidRequestResponse(error.message);
+    }
+
+    console.log('prices', prices);
+
+    const calculator = new Calculator(parsedBody.cdbRate, parsedBody.investmentDate, parsedBody.currentDate, prices);
     const checkParams = calculator.validateParams();
 
     if (!checkParams.valid) {

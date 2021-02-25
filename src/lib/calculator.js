@@ -84,7 +84,7 @@ class Calculator {
                 accumulated = this.getTCDIAccumulatedValue(accumulated, tcdi, this.cdbRate);
 
                 result.push({
-                    date: firstDate.format('YYYY-MM-DD'),
+                    date: key,
                     unitPrice: 1000 * parseFloat(accumulated.toFixed(8))
                 });
             }

@@ -1,8 +1,9 @@
 const fs = require('fs');
+const moment = require('moment-timezone');
 const { validateDateFormat } = require('./helper');
 
 exports.getJSONPricesFromCsv = async (path) => {
-    let prices = {}, data;
+    let prices = {}, data, delimiter;
 
     try {
         data = (await fs.promises.readFile(path)).toString();
@@ -10,7 +11,13 @@ exports.getJSONPricesFromCsv = async (path) => {
         throw new Error('invalid csv path');
     }
 
-    data = data.split('\r\n').map(item => item.split(','));
+    if (data.indexOf('\r\n') > -1) {
+        delimiter = '\r\n';
+    } else {
+        delimiter = '\n';
+    }
+
+    data = data.split(delimiter).map(item => item.split(','));
 
     for (let row of data) {
         if (!row || !row[0]) {
@@ -21,7 +28,7 @@ exports.getJSONPricesFromCsv = async (path) => {
             continue;
         }
 
-        prices[row[1]] = parseFloat(row[2]);
+        prices[moment(row[1], 'DD/MM/YYYY').format('YYYY-MM-DD')] = parseFloat(row[2]);
     }
 
     return prices;
