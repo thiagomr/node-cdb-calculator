@@ -1,3 +1,4 @@
+const { validateDateFormat } = require('./helper');
 const moment = require('moment-timezone');
 
 class Calculator {
@@ -30,14 +31,14 @@ class Calculator {
             };
         }
 
-        if (!this.validateDateFormat(this.investmentDate)) {
+        if (!validateDateFormat(this.investmentDate)) {
             return {
                 valid: false,
                 message: 'invalid date format [investmentDate]'
             };
         }
 
-        if (!this.validateDateFormat(this.currentDate)) {
+        if (!validateDateFormat(this.currentDate)) {
             return {
                 valid: false,
                 message: 'invalid date format [currentDate]'
@@ -62,14 +63,6 @@ class Calculator {
             valid: true,
             message: null
         };
-    }
-
-    validateDateFormat(date) {
-        return moment(date, 'YYYY-MM-DD', true).isValid();
-    }
-
-    getCDIListBetweenTwoValues() {
-
     }
 
     getCDITaxValue(price) {
