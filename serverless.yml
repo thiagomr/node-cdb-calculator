@@ -12,11 +12,80 @@ provider:
 plugins:
   - serverless-pseudo-parameters
   - serverless-offline
+  - serverless-openapi-documentation
+
+custom:
+  documentation:
+    version: '1'
+    title: 'node-cdb-calculator'
+    description: ''
+    models:
+      - name: ErrorResponse
+        description: Error Response
+        contentType: application/json
+        schema:
+          type: object
+          properties:
+            message:
+              type: string
+      - name: 'CDBResponse'
+        description: CDB Unit Prices by date
+        contentType: application/json
+        schema:
+          type: array
+          items:
+            type: object
+            properties:
+              date:
+                type: string
+                example: server error
+              unitPrice:
+                type: number
+                example: 1055.11
+      - name: 'CDBRequest'
+        description: CDB request body
+        contentType: application/json
+        schema:
+          type: object
+          properties:
+            cdbRate:
+              type: string
+              example: 12.11
+            investmentDate:
+              type: string
+              example: '2019-01-01'
+            currentDate:
+              type: string
+              example: '2019-02-01'
 
 functions:
-  post:
+  cdb:
     handler: src/handler.cdb
     events:
       - http:
-          path: /v1/cdb
+          path: v1/cdb
           method: post
+          documentation:
+            summary: Calculate cdb
+            description: Calculate cdb unit prices between two dates
+            requestBody:
+              description: Request CDB unit prices
+            requestModels:
+              application/json: 'CDBRequest'
+            methodResponses:
+              - statusCode: 201
+                responseBody:
+                  description: Array of objects with date and unit price
+                responseModels:
+                  application/json: 'CDBResponse'
+              - statusCode: 400
+                responseBody:
+                  description: Missing parameter error
+                responseModels:
+                  application/json: ErrorResponse
+              - statusCode: 500
+                responseBody:
+                  description: Server error
+                responseModels:
+                  application/json: ErrorResponse
+

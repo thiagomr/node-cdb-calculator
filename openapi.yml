@@ -1,0 +1,61 @@
+openapi: 3.0.0
+components:
+  schemas:
+    ErrorResponse:
+      type: object
+      properties:
+        message:
+          type: string
+    CDBResponse:
+      type: array
+      items:
+        type: object
+        properties:
+          date:
+            type: string
+            example: server error
+          unitPrice:
+            type: number
+            example: 1055.11
+    CDBRequest:
+      type: object
+      properties:
+        cdbRate:
+          type: string
+          example: 12.11
+        investmentDate:
+          type: string
+          example: '2019-01-01'
+        currentDate:
+          type: string
+          example: '2019-02-01'
+  securitySchemes: {}
+info:
+  title: node-cdb-calculator
+  description: ''
+  version: '1'
+paths:
+  /v1/cdb:
+    post:
+      operationId: cdb
+      summary: Calculate cdb
+      description: Calculate cdb unit prices between two dates
+      responses:
+        '201':
+          description: Array of objects with date and unit price
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CDBResponse'
+        '400':
+          description: Missing parameter error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'

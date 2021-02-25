@@ -1,0 +1,6 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "cdbRate": 103.5,
+    "investmentDate": "2019-01-01",
+    "currentDate": "2019-02-01"
+}
