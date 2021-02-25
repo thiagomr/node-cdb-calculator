@@ -6,7 +6,7 @@ class Calculator {
         this.cdbRate = cdbRate;
         this.investmentDate = investmentDate;
         this.currentDate = currentDate;
-        this.cdiPrices = cdiPrices;
+        this.cdiPrices = cdiPrices || {};
     }
 
     validateParams() {
