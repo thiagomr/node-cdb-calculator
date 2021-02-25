@@ -1,4 +1,4 @@
-service: article
+service: cbd
 frameworkVersion: '2'
 
 provider:
