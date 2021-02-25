@@ -1,0 +1,22 @@
+service: article
+frameworkVersion: '2'
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  lambdaHashingVersion: 20201221
+  region: sa-east-1
+  apiGateway:
+    shouldStartNameWithService: true
+
+plugins:
+  - serverless-pseudo-parameters
+  - serverless-offline
+
+functions:
+  post:
+    handler: src/handler.cdb
+    events:
+      - http:
+          path: /v1/cdb
+          method: post
