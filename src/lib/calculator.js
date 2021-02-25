@@ -72,14 +72,39 @@ class Calculator {
 
     }
 
-    getCDITaxValue() {
-
+    getCDITaxValue(price) {
+        const value = (Math.pow(price / 100 + 1, 1 / 252) - 1).toFixed(8);
+        return parseFloat(value);
     }
 
-    getTCDITaxAccumulatedValue() {
+    getCDITaxHistory() {
+        const firstDate = moment(this.investmentDate);
+        const lastDate = moment(this.currentDate);
+        const result = [];
+        let accumulated = 1;
 
+        while (firstDate <= lastDate) {
+            let key = firstDate.format('YYYY-MM-DD');
+
+            if (this.cdiPrices[key]) {
+                const tcdi = this.getCDITaxValue(this.cdiPrices[key]);
+                accumulated = this.getTCDIAccumulatedValue(accumulated, tcdi, this.cdbRate);
+
+                result.push({
+                    date: firstDate.format('YYYY-MM-DD'),
+                    unitPrice: 1000 * parseFloat(accumulated.toFixed(8))
+                });
+            }
+
+            firstDate.add(1, 'day');
+        }
+
+        return result;
     }
 
+    getTCDIAccumulatedValue(accumulatedValue, tcdValue, cdbRateValue) {
+        return accumulatedValue * (1 + tcdValue * cdbRateValue / 100);
+    }
 }
 
 module.exports = Calculator;
